@@ -54,7 +54,11 @@ This inserts 20+ mood entries, 15+ coping actions, and 10+ support resources int
 uvicorn main:app --reload
 ```
 
-API docs are available at [http://localhost:8000/docs](http://localhost:8000/docs).
+After running the server locally, interactive API docs are available at:
+http://localhost:8000/docs
+
+A PDF version of the API documentation is also included in this repository:
+[MoodBridge API - Swagger UI.pdf]
 
 ## API Overview
 
