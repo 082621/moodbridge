@@ -7,7 +7,7 @@ A wellbeing journaling and insight REST API designed for students. Log mood entr
 - **Python 3.11+** / **FastAPI**
 - **SQLite** via SQLAlchemy ORM
 - **Pydantic v2** for request/response validation
-- **pytest + httpx** for async testing
+- **Swagger UI** for interactive documentation and manual testing
 
 ## Project Structure
 
@@ -22,13 +22,8 @@ moodbridge/
 │   ├── coping.py         # Coping action CRUD endpoints
 │   ├── resources.py      # Support resources endpoints
 │   └── analytics.py      # Analytics and insights endpoints
-├── tests/
-│   ├── conftest.py       # Shared fixtures (test DB, async client)
-│   ├── test_moods.py
-│   ├── test_coping.py
-│   ├── test_resources.py
-│   └── test_analytics.py
 ├── seed_data.py          # Populate DB with sample data
+├── MoodBridge API - Swagger UI.pdf
 └── requirements.txt
 ```
 
@@ -57,8 +52,10 @@ uvicorn main:app --reload
 After running the server locally, interactive API docs are available at:
 http://localhost:8000/docs
 
+This coursework submission is currently designed for reliable **local execution**.
+
 A PDF version of the API documentation is also included in this repository:
-[MoodBridge API - Swagger UI.pdf]
+[MoodBridge API - Swagger UI.pdf](MoodBridge%20API%20-%20Swagger%20UI.pdf)
 
 ## API Overview
 
@@ -126,12 +123,12 @@ A PDF version of the API documentation is also included in this repository:
 | `url` | string (optional) | Link to the resource |
 | `description` | string | Short description |
 
-## Running Tests
+## Testing Approach
 
-Tests use an isolated SQLite database and never touch `moodbridge.db`.
+Current testing is manual through Swagger UI at `/docs`. I tested each endpoint with valid and invalid payloads, including validation boundaries, missing IDs, and query filters.
 
-```bash
-pytest tests/ -v
-```
+The seeded 30-day sample data is used to exercise the analytics endpoints so `/summary`, `/triggers`, `/coping-effectiveness`, and `/trends` return meaningful outputs during the demo.
 
-25 tests covering all endpoints — CRUD, validation boundaries, filters, and analytics.
+Automated tests are a suitable future improvement, but they are not currently included in this coursework submission.
+
+
