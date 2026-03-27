@@ -69,16 +69,21 @@ async def get_coping_effectiveness(db: Session = Depends(get_db)):
 @router.get("/trends", response_model=List[schemas.TrendPointOut])
 async def get_trends(days: int = 30, db: Session = Depends(get_db)):
     """Return daily average intensity over the past N days, suitable for charting."""
-    entries = (
-        db.query(models.MoodEntry)
+    day_expr = func.date(models.MoodEntry.created_at)
+    rows = (
+        db.query(
+            day_expr.label("day"),
+            func.avg(models.MoodEntry.intensity).label("avg_intensity"),
+        )
         .filter(models.MoodEntry.created_at >= _since(days))
+        .group_by(day_expr)
+        .order_by(day_expr)
         .all()
     )
-    daily: dict = defaultdict(list)
-    for e in entries:
-        day = e.created_at.strftime("%Y-%m-%d")
-        daily[day].append(e.intensity)
     return [
-        schemas.TrendPointOut(date=day, average_intensity=round(sum(vals) / len(vals), 2))
-        for day, vals in sorted(daily.items())
+        schemas.TrendPointOut(
+            date=str(r.day),
+            average_intensity=round(r.avg_intensity, 2),
+        )
+        for r in rows
     ]
